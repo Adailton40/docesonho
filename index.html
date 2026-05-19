@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canjica Caseira — Pedido</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: #fdf5e8;
+  color: #2e1500;
+  min-height: 100vh;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fu { animation: fadeUp 0.5s ease both; }
+.d1{animation-delay:.05s}.d2{animation-delay:.12s}.d3{animation-delay:.2s}
+.d4{animation-delay:.28s}.d5{animation-delay:.36s}.d6{animation-delay:.44s}
+.d7{animation-delay:.52s}
+
+/* HERO */
+.hero {
+  background: linear-gradient(150deg, #fcebd0 0%, #f5d8a8 100%);
+  border-bottom: 3px solid #c9711a;
+  padding: 48px 24px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #c9711a, #e8a830, #c9711a);
+}
+.badge {
+  display: inline-block;
+  background: #c9711a;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 5px 16px;
+  border-radius: 40px;
+  margin-bottom: 16px;
+}
+.hero-emoji { font-size: 60px; display: block; margin-bottom: 10px; }
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(30px, 8vw, 50px);
+  font-weight: 900;
+  color: #2e1500;
+  line-height: 1.1;
+}
+.hero-sub {
+  margin-top: 12px;
+  font-size: clamp(14px, 3.5vw, 16px);
+  color: #7a4410;
+  line-height: 1.55;
+}
+.hero-sub strong { color: #c9711a; font-style: normal; }
+.divider {
+  width: 50px; height: 3px;
+  background: linear-gradient(90deg, #b4460f, #e8a830);
+  border-radius: 2px;
+  margin: 16px auto 0;
+}
+
+/* WRAP */
+.wrap { max-width: 520px; margin: 0 auto; padding: 28px 16px 56px; }
+
+/* SECTION */
+.sec { margin-bottom: 28px; }
+.sec-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #c9711a;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sec-label::after {
+  content: '';
+  flex: 1; height: 1px;
+  background: linear-gradient(90deg, #e8c080, transparent);
+}
+
+/* TAMANHO CARDS */
+.tamanhos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+
+.tam-card {
+  background: #fff;
+  border: 2px solid #e8d5b0;
+  border-radius: 18px;
+  padding: 20px 8px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(180,100,20,0.06);
+}
+.tam-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #b4460f, #e8a830);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.tam-card:hover {
+  border-color: #c9711a;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(180,100,20,0.12);
+}
+.tam-card.sel {
+  border-color: #c9711a;
+  background: linear-gradient(160deg, #fff7ec, #fff);
+  box-shadow: 0 0 0 1px #c9711a, 0 8px 28px rgba(200,110,20,0.18);
+}
+.tam-card.sel::before { opacity: 1; }
+.tam-check {
+  position: absolute;
+  top: 8px; right: 10px;
+  width: 20px; height: 20px;
+  background: #c9711a;
+  border-radius: 50%;
+  font-size: 11px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  font-weight: 900;
+  opacity: 0;
+  transform: scale(0.4);
+  transition: all 0.2s;
+}
+.tam-card.sel .tam-check { opacity: 1; transform: scale(1); }
+
+/* TAMANHO em destaque */
+.tam-ml {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 900;
+  color: #2e1500;
+  display: block;
+  line-height: 1;
+}
+.tam-ml-unit {
+  font-size: 13px;
+  font-weight: 500;
+  color: #9a6030;
+  display: block;
+  margin-bottom: 6px;
+}
+.tam-emoji { font-size: 34px; display: block; margin: 6px 0 10px; }
+.tam-preco {
+  font-size: 18px;
+  font-weight: 700;
+  color: #c9711a;
+  display: block;
+  background: #fff5e8;
+  border-radius: 8px;
+  padding: 4px 0;
+}
+
+/* QTD */
+.qty-wrap {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 2px solid #e8d5b0;
+  border-radius: 50px;
+  width: fit-content;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(180,100,20,0.06);
+  transition: border 0.2s;
+}
+.qty-wrap:hover { border-color: #c9711a; }
+.qty-btn {
+  width: 52px; height: 52px;
+  background: none; border: none;
+  font-size: 24px; font-weight: 700;
+  color: #c9711a;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.qty-btn:hover { background: #fff3e4; }
+.qty-num {
+  min-width: 52px;
+  text-align: center;
+  font-size: 22px; font-weight: 700;
+  color: #2e1500;
+  border-left: 1px solid #e8d5b0;
+  border-right: 1px solid #e8d5b0;
+  padding: 12px 0;
+}
+
+/* DATA */
+.date-field {
+  background: #fff;
+  border: 2px solid #e8d5b0;
+  border-radius: 14px;
+  padding: 14px 18px;
+  display: flex; align-items: center; gap: 14px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(180,100,20,0.06);
+  transition: border 0.2s;
+}
+.date-field:hover, .date-field:focus-within { border-color: #c9711a; }
+.date-icon { font-size: 26px; flex-shrink: 0; }
+.date-inner { flex: 1; }
+.date-inner label {
+  font-size: 10px; letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #9a6030; display: block; margin-bottom: 4px;
+}
+.date-inner input[type="date"] {
+  background: none; border: none; outline: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 17px; font-weight: 600;
+  color: #2e1500; width: 100%; cursor: pointer;
+  color-scheme: light;
+}
+.date-hint { font-size: 12px; color: #9a6030; margin-top: 6px; }
+
+/* ADICIONAIS */
+.adics { display: flex; flex-direction: column; gap: 8px; }
+.adic {
+  background: #fff;
+  border: 2px solid #e8d5b0;
+  border-radius: 14px;
+  padding: 13px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+  box-shadow: 0 1px 4px rgba(180,100,20,0.05);
+}
+.adic:hover { border-color: #c9711a; }
+.adic.sel {
+  border-color: #c9711a;
+  background: linear-gradient(90deg, #fff8f0, #fff);
+}
+.adic-left { display: flex; align-items: center; gap: 12px; }
+.adic-em { font-size: 22px; }
+.adic-nome { font-size: 15px; font-weight: 500; color: #2e1500; }
+.adic-right { display: flex; align-items: center; gap: 10px; }
+.adic-val { font-size: 14px; font-weight: 700; color: #c9711a; }
+.box {
+  width: 22px; height: 22px;
+  border: 2px solid #d8b880;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 900;
+  color: #fff;
+  transition: all 0.2s;
+}
+.adic.sel .box { background: #c9711a; border-color: #c9711a; }
+
+/* TEXTAREA */
+textarea {
+  width: 100%;
+  background: #fff;
+  border: 2px solid #e8d5b0;
+  border-radius: 14px;
+  padding: 14px 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  color: #2e1500;
+  resize: vertical; min-height: 90px;
+  outline: none;
+  box-shadow: 0 1px 4px rgba(180,100,20,0.05);
+  transition: border 0.2s;
+}
+textarea::placeholder { color: #c8a878; }
+textarea:focus { border-color: #c9711a; }
+
+/* RESUMO */
+.resumo {
+  background: linear-gradient(135deg, #fff7ec, #fffaf4);
+  border: 2px solid #e8c080;
+  border-radius: 18px;
+  padding: 22px 20px;
+  margin-bottom: 22px;
+  box-shadow: 0 4px 16px rgba(180,100,20,0.08);
+}
+.resumo-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  color: #2e1500;
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.resumo-row {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 14px; color: #6b3a10; padding: 5px 0;
+}
+.resumo-row.sub { color: #b89060; font-size: 13px; padding-left: 10px; }
+.resumo-row.total {
+  border-top: 1.5px solid #e8c080;
+  margin-top: 12px; padding-top: 12px;
+  font-size: 20px; font-weight: 700;
+  color: #c9711a;
+}
+.resumo-empty { text-align: center; color: #c8a878; font-size: 14px; padding: 10px 0; }
+
+/* BOTÃO WA */
+.btn-wa {
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  width: 100%;
+  background: linear-gradient(135deg, #2db860, #1ea84f);
+  color: #fff;
+  border: none; border-radius: 16px;
+  padding: 20px;
+  font-size: 17px; font-weight: 700;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.25s;
+  box-shadow: 0 6px 24px rgba(30,168,80,0.28);
+}
+.btn-wa:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(30,168,80,0.38);
+}
+.btn-wa svg { width: 24px; height: 24px; fill: #fff; flex-shrink: 0; }
+
+@keyframes pulse {
+  0%,100% { box-shadow: 0 6px 24px rgba(30,168,80,0.28); }
+  50%      { box-shadow: 0 6px 40px rgba(30,168,80,0.55); }
+}
+.btn-wa.ready { animation: pulse 2s ease-in-out infinite; }
+
+.pix-tag {
+  text-align: center; margin-top: 14px;
+  font-size: 13px; color: #9a6030;
+}
+.pix-tag strong { color: #c9711a; }
+
+/* ALERTA */
+.alerta {
+  background: #fff3e0;
+  border: 1.5px solid #e8a060;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 14px; color: #8b4500;
+  margin-bottom: 16px;
+  display: none; text-align: center;
+}
+
+/* FOOTER */
+footer {
+  background: #f0ddb8;
+  border-top: 2px solid #e8c080;
+  padding: 22px;
+  text-align: center;
+  font-size: 13px; color: #7a4810;
+}
+footer strong { color: #c9711a; }
+</style>
+</head>
+<body>
+
+<header class="hero fu d1">
+  <div class="badge">🍮 Peça a sua agora</div>
+  <span class="hero-emoji">🍮</span>
+  <h1>Canjica Caseira</h1>
+  <p class="hero-sub">
+    O frio chegou.<br>
+    <strong>Sua canjica também precisa chegar.</strong>
+  </p>
+  <div class="divider"></div>
+</header>
+
+<div class="wrap">
+
+  <!-- Tamanho -->
+  <div class="sec fu d2">
+    <div class="sec-label">Tamanho do pote</div>
+    <div class="tamanhos" id="tamanhos">
+      <div class="tam-card" data-ml="250" data-preco="16" onclick="selTam(this)">
+        <div class="tam-check">✓</div>
+        <span class="tam-ml">250</span>
+        <span class="tam-ml-unit">ml</span>
+        <span class="tam-emoji">🥛</span>
+        <span class="tam-preco">R$ 16,00</span>
+      </div>
+      <div class="tam-card" data-ml="300" data-preco="19" onclick="selTam(this)">
+        <div class="tam-check">✓</div>
+        <span class="tam-ml">300</span>
+        <span class="tam-ml-unit">ml</span>
+        <span class="tam-emoji">🍯</span>
+        <span class="tam-preco">R$ 19,00</span>
+      </div>
+      <div class="tam-card" data-ml="400" data-preco="25" onclick="selTam(this)">
+        <div class="tam-check">✓</div>
+        <span class="tam-ml">400</span>
+        <span class="tam-ml-unit">ml</span>
+        <span class="tam-emoji">🏺</span>
+        <span class="tam-preco">R$ 25,00</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quantidade -->
+  <div class="sec fu d3">
+    <div class="sec-label">Quantidade</div>
+    <div class="qty-wrap">
+      <button class="qty-btn" onclick="mudaQty(-1)">−</button>
+      <div class="qty-num" id="qty">1</div>
+      <button class="qty-btn" onclick="mudaQty(1)">+</button>
+    </div>
+  </div>
+
+  <!-- Nome -->
+  <div class="sec fu d3">
+    <div class="sec-label">Seu nome <span style="color:#c9711a">*</span></div>
+    <div class="date-field" id="nome-wrap">
+      <span class="date-icon">👤</span>
+      <div class="date-inner">
+        <label for="nomeCliente">Obrigatório</label>
+        <input type="text" id="nomeCliente" placeholder="Ex: Maria Silva" oninput="atualizaResumo(); validaNome()" style="background:none;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:17px;font-weight:600;color:#2e1500;width:100%;">
+      </div>
+    </div>
+    <div class="date-hint" id="nome-erro" style="color:#c0390b;display:none;">⚠️ Por favor, informe seu nome.</div>
+  </div>
+
+  <!-- Local -->
+  <div class="sec fu d4">
+    <div class="sec-label">Local <span style="color:#9a6030;font-size:10px;font-weight:400;letter-spacing:0">(opcional)</span></div>
+    <div class="date-field">
+      <span class="date-icon">📍</span>
+      <div class="date-inner">
+        <label for="localEntrega">Local</label>
+        <input type="text" id="localEntrega" placeholder="Ex: Trabalho, Casa, Portaria..." oninput="atualizaResumo()" style="background:none;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:500;color:#2e1500;width:100%;">
+      </div>
+    </div>
+  </div>
+
+  <!-- Data -->
+  <div class="sec fu d4">
+    <div class="sec-label">Dia da entrega</div>
+    <div class="date-field" id="date-field-wrap">
+      <span class="date-icon">📅</span>
+      <div class="date-inner">
+        <label for="dataEntrega">Data de entrega</label>
+        <input type="date" id="dataEntrega" onchange="atualizaResumo()" style="background:none;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:17px;font-weight:600;color:#2e1500;width:100%;cursor:pointer;color-scheme:light;">
+      </div>
+    </div>
+    <div class="date-hint" id="date-hint">Aguarde a confirmação da data com o vendedor.</div>
+  </div>
+
+  <!-- Adicionais -->
+  <div class="sec fu d4">
+    <div class="sec-label">Adicionais (por pote)</div>
+    <div class="adics">
+      <div class="adic" data-nome="Coco ralado" data-preco="1" onclick="togAdic(this)">
+        <div class="adic-left"><span class="adic-em">🥥</span><span class="adic-nome">Coco ralado</span></div>
+        <div class="adic-right"><span class="adic-val">+R$ 1,00</span><div class="box"></div></div>
+      </div>
+      <div class="adic" data-nome="Canela em pó" data-preco="1" onclick="togAdic(this)">
+        <div class="adic-left"><span class="adic-em">🌿</span><span class="adic-nome">Canela em pó</span></div>
+        <div class="adic-right"><span class="adic-val">+R$ 1,00</span><div class="box"></div></div>
+      </div>
+      <div class="adic" data-nome="Paçoca" data-preco="1" onclick="togAdic(this)">
+        <div class="adic-left"><span class="adic-em">🥜</span><span class="adic-nome">Paçoca</span></div>
+        <div class="adic-right"><span class="adic-val">+R$ 1,00</span><div class="box"></div></div>
+      </div>
+      <div class="adic" data-nome="Amendoim torrado" data-preco="2" onclick="togAdic(this)">
+        <div class="adic-left"><span class="adic-em">🥜</span><span class="adic-nome">Amendoim torrado</span></div>
+        <div class="adic-right"><span class="adic-val">+R$ 2,00</span><div class="box"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Obs -->
+  <div class="sec fu d5">
+    <div class="sec-label">Observações</div>
+    <textarea id="obs" placeholder="Ex: endereço, mais doce, menos canela..."></textarea>
+  </div>
+
+  <!-- Resumo -->
+  <div class="resumo fu d6">
+    <div class="resumo-title">🧾 Resumo do pedido</div>
+    <div id="resumo-linhas"><div class="resumo-empty">Selecione um tamanho acima</div></div>
+  </div>
+
+  <div class="alerta" id="alerta">⚠️ Selecione um tamanho antes de enviar.</div>
+
+  <button class="btn-wa fu d7" id="btn-wa" onclick="enviar()">
+    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    Enviar pedido pelo WhatsApp
+  </button>
+
+  <p class="pix-tag">💳 Pix: <strong>(41) 98780-1463</strong> · Chave celular</p>
+
+</div>
+
+<footer>
+  <strong>🍮 Canjica Caseira · Curitiba/PR</strong><br>
+  (41) 98780-1463 · Entrega combinada
+</footer>
+
+<script>
+const WA = '5541987801463';
+let tam = null, qty = 1;
+
+// ── Lê data da URL (?entrega=2026-05-22) e trava o campo ──────────────────
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const d = params.get('entrega');
+  const input = document.getElementById('dataEntrega');
+  const hint  = document.getElementById('date-hint');
+  if (d) {
+    input.value = d;
+    input.readOnly = true;
+    input.style.pointerEvents = 'none';
+    input.style.opacity = '1';
+    hint.textContent = '✅ Data já confirmada pelo vendedor.';
+    hint.style.color = '#1a8040';
+  }
+})();
+
+function selTam(el) {
+  document.querySelectorAll('.tam-card').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+  tam = { ml: el.dataset.ml + 'ml', preco: parseFloat(el.dataset.preco) };
+  document.getElementById('alerta').style.display = 'none';
+  document.getElementById('btn-wa').classList.add('ready');
+  atualizaResumo();
+}
+
+function togAdic(el) {
+  el.classList.toggle('sel');
+  el.querySelector('.box').textContent = el.classList.contains('sel') ? '✓' : '';
+  atualizaResumo();
+}
+
+function mudaQty(d) {
+  qty = Math.max(1, qty + d);
+  document.getElementById('qty').textContent = qty;
+  atualizaResumo();
+}
+
+function getAdics() {
+  return [...document.querySelectorAll('.adic.sel')].map(el => ({
+    nome: el.dataset.nome, preco: parseFloat(el.dataset.preco)
+  }));
+}
+
+function fmtData(val) {
+  if (!val) return null;
+  const [y, m, d] = val.split('-');
+  const dias = ['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
+  const dt = new Date(y, m-1, d);
+  return `${dias[dt.getDay()]}, ${d}/${m}/${y}`;
+}
+
+function fmtR(v) { return 'R$ ' + v.toFixed(2).replace('.', ','); }
+
+function validaNome() {
+  const val = document.getElementById('nomeCliente').value.trim();
+  const wrap = document.getElementById('nome-wrap');
+  const erro = document.getElementById('nome-erro');
+  if (!val) {
+    wrap.style.borderColor = '#e05030';
+    erro.style.display = 'block';
+    return false;
+  }
+  wrap.style.borderColor = '#c9711a';
+  erro.style.display = 'none';
+  return true;
+}
+
+function atualizaResumo() {
+  const el = document.getElementById('resumo-linhas');
+  const nome  = document.getElementById('nomeCliente').value.trim();
+  const local = document.getElementById('localEntrega').value.trim();
+
+  if (!tam) { el.innerHTML = '<div class="resumo-empty">Selecione um tamanho acima</div>'; return; }
+
+  const adics = getAdics();
+  const totalAdics = adics.reduce((s,a) => s + a.preco, 0);
+  const total = (tam.preco + totalAdics) * qty;
+  const dataFmt = fmtData(document.getElementById('dataEntrega').value);
+
+  let html = '';
+
+  if (nome) {
+    html += `<div class="resumo-row">
+      <span>👤 Cliente</span>
+      <span style="font-weight:700">${nome}</span>
+    </div>`;
+  }
+
+  html += `<div class="resumo-row">
+    <span>🍯 Canjica ${tam.ml} × ${qty}</span>
+    <span>${fmtR(tam.preco * qty)}</span>
+  </div>`;
+
+  adics.forEach(a => {
+    html += `<div class="resumo-row sub">
+      <span>+ ${a.nome} × ${qty}</span>
+      <span>${fmtR(a.preco * qty)}</span>
+    </div>`;
+  });
+
+  if (dataFmt) {
+    html += `<div class="resumo-row" style="margin-top:8px">
+      <span>📅 Entrega</span>
+      <span style="color:#c9711a;font-weight:600">${dataFmt}</span>
+    </div>`;
+  }
+
+  if (local) {
+    html += `<div class="resumo-row">
+      <span>📍 Local</span>
+      <span style="text-align:right;max-width:60%">${local}</span>
+    </div>`;
+  }
+
+  html += `<div class="resumo-row total"><span>Total</span><span>${fmtR(total)}</span></div>`;
+  el.innerHTML = html;
+}
+
+function enviar() {
+  const nome = document.getElementById('nomeCliente').value.trim();
+
+  if (!nome) {
+    validaNome();
+    document.getElementById('nome-wrap').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  if (!tam) {
+    const al = document.getElementById('alerta');
+    al.style.display = 'block';
+    al.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  const adics = getAdics();
+  const total = (tam.preco + adics.reduce((s,a) => s+a.preco,0)) * qty;
+  const dataFmt = fmtData(document.getElementById('dataEntrega').value);
+  const local = document.getElementById('localEntrega').value.trim();
+  const obs   = document.getElementById('obs').value.trim();
+
+  let msg = `🍮 *PEDIDO — CANJICA CASEIRA* 🍮\n\n`;
+  msg += `👤 *Cliente:* ${nome}\n`;
+  msg += `🍯 *Tamanho:* ${tam.ml} — ${fmtR(tam.preco)}\n`;
+  msg += `🔢 *Quantidade:* ${qty} pote(s)\n`;
+  if (adics.length) {
+    msg += `\n✨ *Adicionais por pote:*\n`;
+    adics.forEach(a => msg += `  • ${a.nome} — +${fmtR(a.preco)}\n`);
+  }
+  if (dataFmt) msg += `\n📅 *Entrega:* ${dataFmt}\n`;
+  if (local)   msg += `📍 *Local:* ${local}\n`;
+  msg += `\n💰 *Total: ${fmtR(total)}*\n`;
+  if (obs) msg += `\n📝 *Obs:* ${obs}\n`;
+  msg += `\n_Pedido feito pelo site_ 🍮`;
+
+  window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+atualizaResumo();
+</script>
+</body>
+</html>
